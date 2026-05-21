@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>PING Canada Tournament of Champions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-0:     #04070e;
+    --bg-1:     #070b16;
+    --bg-2:     #0c1322;
+    --surface:  #10182a;
+    --surface-2:#141d33;
+    --ink:      #f3ead8;
+    --ink-mute: rgba(243,234,216,.62);
+    --ink-dim:  rgba(243,234,216,.42);
+    --gold:     #c9a35a;
+    --gold-2:   #e9d8a8;
+    --gold-deep:#8a6526;
+    --teal:     #1ec0c0;       /* nod to Kailani brand */
+    --live:     #e34a25;
+    --rule:     rgba(201,163,90,.18);
+    --rule-2:   rgba(243,234,216,.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100vh; }
+  body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background:
+      radial-gradient(900px 600px at 80% -5%, #1a2748 0%, transparent 55%),
+      radial-gradient(700px 500px at -10% 110%, #0f1a36 0%, transparent 55%),
+      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 100%);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode: overlay; opacity: .45;
+  }
+
+  /* full-screen app shell, centered column */
+  .app {
+    position: relative; z-index: 1;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 0 16px 32px;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ── top bar ── */
+  .topbar {
+    padding: 18px 6px 6px;
+    display: grid;
+    grid-template-columns: 36px 1fr 36px;
+    align-items: center;
+    gap: 8px;
+  }
+  .icon-btn {
+    width: 36px; height: 36px; display: grid; place-items: center;
+    color: var(--ink); border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--rule-2);
+  }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .topbar .title {
+    text-align: center;
+    font-size: 11px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--ink-mute);
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .topbar .title .chev { opacity: .6; }
+  .topbar .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+    color: var(--bg-1); display: grid; place-items: center;
+    font-size: 12px; font-weight: 800; letter-spacing: .02em;
+    margin-left: auto;
+  }
+
+  /* ── score CTA ribbon ── */
+  .score-cta {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #d23a2a 0%, #a8261b 100%);
+    color: #fff5ee;
+    box-shadow: 0 10px 28px -10px rgba(210,58,42,.55), inset 0 0 0 1px rgba(255,255,255,.08);
+    text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .score-cta::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(135deg, rgba(255,255,255,.045) 0 6px, transparent 6px 14px);
+    pointer-events: none;
+  }
+  .score-cta .badge {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(14,20,34,.94);
+    color: #ffb39a;
+    display: grid; place-items: center;
+    flex: none; position: relative;
+  }
+  .score-cta .badge svg { width: 20px; height: 20px; }
+  .score-cta .copy { position: relative; flex: 1; min-width: 0; }
+  .score-cta .copy .t1 {
+    font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    line-height: 1.1;
+    color: #fff5ee;
+  }
+  .score-cta .copy .t2 {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 14px; margin-top: 3px; line-height: 1.2;
+    color: rgba(255,245,238,.78);
+  }
+  .score-cta .arrow {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(14,20,34,.94); color: #ffb39a;
+    display: grid; place-items: center; flex: none;
+    position: relative;
+  }
+  .score-cta .arrow svg { width: 12px; height: 12px; }
+
+  /* ── hero card ── */
+  .hero {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 488 / 360;
+    background-color: var(--surface);
+    box-shadow:
+      0 24px 50px -22px rgba(0,0,0,.7),
+      inset 0 0 0 1px var(--rule);
+  }
+  .hero .bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center 28%;
+    transform: scale(1.06);
+  }
+  .hero .bg::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(4,7,14,.25) 0%, rgba(4,7,14,.55) 50%, rgba(4,7,14,.94) 100%),
+      linear-gradient(135deg, rgba(20,29,51,.35) 0%, transparent 55%);
+  }
+  .hero .content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 18px 20px 22px;
+  }
+  .hero .top {
+    display: flex; align-items: flex-start; justify-content: flex-end; gap: 14px;
+  }
+  .hero .ping-mark {
+    height: 34px;
+    display: inline-flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .hero .ping-mark img {
+    height: 100%;
+    filter: brightness(0) invert(1);
+  }
+  .hero .ping-mark .pipe {
+    width: 1px; height: 22px; background: rgba(243,234,216,.4);
+  }
+  .hero .ping-mark .lbl {
+    font-size: 13px; letter-spacing: .3em; text-transform: uppercase;
+    color: rgba(246,239,222,.92);
+    font-weight: 700;
+  }
+  .hero .bm-mark {
+    width: 58px; height: 58px;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(201,163,90,.4);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    backdrop-filter: blur(6px);
+    flex: none;
+  }
+  .hero .bm-mark img { width: 82%; height: 82%; object-fit: contain; }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(40px, 9.5vw, 52px);
+    line-height: .95; letter-spacing: -.01em;
+    margin: 0;
+    color: #f6efde;
+    text-shadow: 0 2px 18px rgba(0,0,0,.55);
+    max-width: 13ch;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold-2); font-weight: 400; }
+  .hero .presented {
+    margin-top: 12px;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 9.5px; letter-spacing: .26em; text-transform: uppercase;
+    color: rgba(246,239,222,.7);
+  }
+  .hero .presented .by { color: var(--gold-2); }
+  .hero .presented .k-logo {
+    height: 22px; filter: brightness(0) invert(1);
+  }
+
+  .hero .meta-row {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(246,239,222,.15);
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 14px;
+  }
+  .hero .meta-row .cell { display: flex; flex-direction: column; gap: 3px; }
+  .hero .meta-row .cell.right { text-align: right; align-items: flex-end; }
+  .hero .meta-row .k {
+    font-size: 9px; letter-spacing: .26em; text-transform: uppercase;
+    color: rgba(246,239,222,.55);
+  }
+  .hero .meta-row .v {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px; line-height: 1.1;
+    color: #f6efde;
+  }
+
+  /* ── tile grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .tile {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1 / 0.95;
+    background-color: var(--surface);
+    box-shadow:
+      0 18px 40px -22px rgba(0,0,0,.65),
+      inset 0 0 0 1px var(--rule);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .tile:active { transform: scale(.985); }
+  .tile .bg {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+  }
+  .tile .bg::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(4,7,14,.0) 0%, rgba(4,7,14,.45) 50%, rgba(4,7,14,.92) 100%);
+  }
+  .tile .accent {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(20,29,51,0) 0%, rgba(7,11,22,.55) 100%);
+  }
+  .tile .content {
+    position: absolute; inset: 0;
+    padding: 14px 16px 16px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: var(--ink);
+  }
+  .tile .top-row {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tile .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--gold-2);
+    font-size: 16px; line-height: 1;
+  }
+  .tile .badge {
+    font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+    padding: 5px 9px; border-radius: 99px;
+    background: rgba(0,0,0,.5);
+    border: 1px solid rgba(201,163,90,.35);
+    color: var(--gold-2);
+    backdrop-filter: blur(4px);
+  }
+  .tile .badge.live {
+    background: var(--live); border-color: transparent; color: #fff;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tile .badge.live::before {
+    content: ""; width: 5px; height: 5px; border-radius: 50%; background: #fff;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .tile .label {
+    font-size: 9.5px; letter-spacing: .28em; text-transform: uppercase;
+    color: rgba(246,239,222,.7); margin-bottom: 4px;
+  }
+  .tile h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 30px; line-height: .94; letter-spacing: -.005em;
+    margin: 0 0 8px;
+    color: #f6efde;
+    text-shadow: 0 2px 12px rgba(0,0,0,.55);
+  }
+  .tile h3 em { font-style: italic; color: var(--gold-2); font-weight: 400; }
+  .tile .foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+    color: rgba(246,239,222,.65);
+  }
+  .tile .foot .arrow {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid rgba(201,163,90,.45);
+    display: grid; place-items: center;
+    color: var(--gold-2);
+  }
+  .tile .foot .arrow svg { width: 11px; height: 11px; }
+
+  .tile.course .bg {
+    background-color: #0a3b34;
+    background-size: 135% auto;
+    background-position: center 42%;
+    background-repeat: no-repeat;
+  }
+  .tile.course .bg::after {
+    background: radial-gradient(70% 50% at 50% 45%, rgba(7,11,22,.0) 0%, rgba(4,7,14,.85) 100%);
+  }
+
+  /* ── sponsors strip ── */
+  .sponsors {
+    padding: 16px 16px 14px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--rule);
+  }
+  .sponsors .head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .sponsors .head .l {
+    font-size: 9.5px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .sponsors .head .r {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 13px; color: var(--ink-mute);
+  }
+  .sponsors .logos {
+    display: grid; grid-template-columns: 1fr 1.3fr 1fr;
+    gap: 10px;
+  }
+  .sponsors .logo {
+    padding: 14px 10px;
+    background: rgba(246,239,222,.06);
+    border: 1px solid var(--rule-2);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    min-height: 64px;
+    position: relative;
+  }
+  .sponsors .logo .role {
+    position: absolute; top: 6px; left: 8px;
+    font-size: 7px; letter-spacing: .24em; text-transform: uppercase;
+    color: rgba(246,239,222,.4);
+  }
+  .sponsors .logo .ping-img {
+    max-height: 22px; max-width: 100%; object-fit: contain;
+    filter: brightness(0) invert(1) opacity(.95);
+  }
+  .sponsors .logo .kailani-img {
+    max-height: 26px; max-width: 100%; object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+  .sponsors .logo .bm-img {
+    max-height: 36px; max-width: 100%; object-fit: contain;
+    opacity: .95;
+  }
+
+  /* ── footer ── */
+  .pagefoot {
+    text-align: center;
+    font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-top: 12px;
+  }
+
+  /* ── prize sheet (modal) ── */
+  .sheet-bg {
+    position: fixed; inset: 0; z-index: 99;
+    background: rgba(2,5,12,.7);
+    backdrop-filter: blur(8px);
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  .sheet {
+    position: fixed; left: 50%; bottom: 0;
+    transform: translate(-50%, 100%);
+    width: 100%; max-width: 520px;
+    max-height: 86vh;
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -30px 60px -20px rgba(0,0,0,.7), inset 0 1px 0 var(--rule);
+    transition: transform .35s cubic-bezier(.2,.8,.2,1);
+    z-index: 100;
+    display: flex; flex-direction: column;
+  }
+  .sheet.open { transform: translate(-50%, 0); }
+  .sheet-bg.open { opacity: 1; pointer-events: auto; }
+  .sheet-handle {
+    width: 40px; height: 4px; border-radius: 99px;
+    background: rgba(243,234,216,.25);
+    margin: 12px auto 6px;
+    flex: none;
+  }
+  .sheet-head {
+    padding: 12px 22px 18px;
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+    flex: none;
+  }
+  .sheet-head .l { flex: 1; min-width: 0; }
+  .sheet-head .eyebrow {
+    font-size: 10px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .sheet-head h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 30px; line-height: 1; letter-spacing: -.005em;
+    margin: 0 0 6px;
+    color: #f6efde;
+  }
+  .sheet-head h2 em { font-style: italic; color: var(--gold-2); font-weight: 400; }
+  .sheet-head .sub { font-size: 12px; color: var(--ink-mute); letter-spacing: .04em; }
+  .sheet-close {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(243,234,216,.08);
+    border: 1px solid var(--rule-2);
+    color: var(--ink); display: grid; place-items: center;
+    flex: none; cursor: pointer;
+  }
+  .sheet-close svg { width: 14px; height: 14px; }
+  .sheet-body {
+    overflow-y: auto;
+    padding: 18px 18px 28px;
+    flex: 1;
+  }
+  .prize-section + .prize-section { margin-top: 22px; }
+  .prize-section .stitle {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px;
+  }
+  .prize-section .stitle .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; color: var(--gold-2);
+    font-size: 14px;
+  }
+  .prize-section .stitle .t {
+    font-size: 11px; letter-spacing: .28em; text-transform: uppercase;
+    color: var(--ink); font-weight: 700;
+  }
+  .prize-section .stitle .c {
+    flex: 1; height: 1px; background: var(--rule);
+  }
+  .prize-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column;
+  }
+  .prize-list li {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    padding: 11px 4px;
+    border-bottom: 1px solid var(--rule-2);
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .prize-list li:last-child { border-bottom: none; }
+  .prize-list li .name { flex: 1; min-width: 0; }
+  .prize-list li .brand {
+    font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700;
+    flex: none;
+  }
+  .prize-list li .brand.projekt { color: var(--teal); }
+
+  /* tiny screens */
+  @media (max-width: 360px) {
+    .hero h1 { font-size: 38px; }
+    .tile h3 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="app" data-screen-label="App">
+
+  <!-- top bar -->
+  <div class="topbar">
+    <button class="icon-btn" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg>
+    </button>
+    <div class="title">EVENT FEED
+      <span class="chev"><svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l4 4 4-4"/></svg></span>
+    </div>
+    <div class="avatar">JD</div>
+  </div>
+
+  <!-- live scoring CTA -->
+  <a class="score-cta" href="https://www.golfgenius.com/" target="_blank" rel="noopener" data-screen-label="Live scores CTA">
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="16" height="18" rx="2"/>
+        <path d="M8 8h8M8 12h8M8 16h5"/>
+      </svg>
+    </div>
+    <div class="copy">
+      <div class="t1">Enter Live Scores</div>
+      <div class="t2">Opens Golf Genius · enter your GGID to begin</div>
+    </div>
+    <div class="arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </div>
+  </a>
+
+  <!-- hero card -->
+  <section class="hero" data-screen-label="Hero">
+    <div class="bg" style="background-image: url('assets/bmgc-3.jpg');"></div>
+    <div class="content">
+      <div class="top">
+        <div class="bm-mark">
+          <img src="assets/black-mountain-logo.png" alt="Black Mountain Golf Club" />
+        </div>
+      </div>
+
+      <div>
+        <div class="ping-mark">
+          <img src="assets/ping-logo.png" alt="PING" />
+          <span class="pipe"></span>
+          <span class="lbl">Canada</span>
+        </div>
+        <h1>Tournament<br/>of <em>Champions</em></h1>
+        <div class="presented">
+          <span class="by">Presented by</span>
+          <img class="k-logo" src="assets/kailani-logo.png" alt="Kailani Outdoors" />
+        </div>
+
+        <div class="meta-row">
+          <div class="cell">
+            <span class="k">Host Venue</span>
+            <span class="v">Black Mountain GC · Kelowna</span>
+          </div>
+          <div class="cell right">
+            <span class="k">Date</span>
+            <span class="v">May 25</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- tile grid -->
+  <section class="grid" data-screen-label="Tile grid">
+
+    <a class="tile draw" href="https://www.golfgenius.com/pages/12724334053898084424" target="_blank" rel="noopener" data-screen-label="Draw tile">
+      <div class="bg" style="background-image: url('assets/bmgc-7.jpg');"></div>
+      <div class="accent"></div>
+      <div class="content">
+        <div class="top-row">
+          <span class="num">01</span>
+          <span class="badge">Tee Sheet</span>
+        </div>
+        <div>
+          <div class="label">Pairings & Times</div>
+          <h3>The <em>Draw</em></h3>
+          <div class="foot">
+            <span>Golf Genius</span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a class="tile results" href="https://www.golfgenius.com/pages/12724334056112676938" target="_blank" rel="noopener" data-screen-label="Results tile">
+      <div class="bg" style="background-image: url('assets/bmgc-9.jpg');"></div>
+      <div class="accent"></div>
+      <div class="content">
+        <div class="top-row">
+          <span class="num">02</span>
+          <span class="badge live">Live</span>
+        </div>
+        <div>
+          <div class="label">Leaderboard</div>
+          <h3><em>Results</em></h3>
+          <div class="foot">
+            <span>Hole-by-hole</span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a class="tile course" href="https://kuula.co/share/NNfs3?fs=1&vr=0&zoom=1&gyro=0&thumbs=1&info=0&logo=-1" target="_blank" rel="noopener" data-screen-label="Course map tile">
+      <div class="bg" style="background-image: url('assets/course-layout.png');"></div>
+      <div class="accent"></div>
+      <div class="content">
+        <div class="top-row">
+          <span class="num">03</span>
+          <span class="badge">18 Flyovers</span>
+        </div>
+        <div>
+          <div class="label">The Layout</div>
+          <h3>Course<br/><em>Map</em></h3>
+          <div class="foot">
+            <span>360° Tour</span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <button type="button" class="tile prizes" id="prizesBtn" data-screen-label="Amateur prizes tile" style="border:0; padding:0; text-align:left; font: inherit;">
+      <div class="bg" style="background-image: url('assets/bmgc-island.jpg');"></div>
+      <div class="accent"></div>
+      <div class="content">
+        <div class="top-row">
+          <span class="num">04</span>
+          <span class="badge">Prize Table</span>
+        </div>
+        <div>
+          <div class="label">Amateur</div>
+          <h3>Amateur<br/><em>Prizes</em></h3>
+          <div class="foot">
+            <span>PING Gear & KP</span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </button>
+
+  </section>
+
+  <!-- sponsors -->
+  <section class="sponsors" data-screen-label="Sponsors">
+    <div class="head">
+      <div class="l">Title Sponsors</div>
+      <div class="r">With gratitude</div>
+    </div>
+    <div class="logos">
+      <div class="logo">
+        <span class="role">Title</span>
+        <img class="ping-img" src="assets/ping-logo.png" alt="PING Canada" />
+      </div>
+      <div class="logo">
+        <span class="role">Presenting</span>
+        <img class="kailani-img" src="assets/kailani-logo.png" alt="Kailani Outdoors" />
+      </div>
+      <div class="logo">
+        <span class="role">Host</span>
+        <img class="bm-img" src="assets/black-mountain-logo.png" alt="Black Mountain GC" />
+      </div>
+    </div>
+  </section>
+
+  <div class="pagefoot">© 2026 PGA of British Columbia</div>
+
+</main>
+
+<!-- ── Prize Sheet ── -->
+<div class="sheet-bg" id="sheetBg"></div>
+<aside class="sheet" id="prizeSheet" role="dialog" aria-modal="true" aria-labelledby="prizeTitle">
+  <div class="sheet-handle"></div>
+  <header class="sheet-head">
+    <div class="l">
+      <div class="eyebrow">Amateur Awards · 2026</div>
+      <h2 id="prizeTitle">Amateur <em>Prizes</em></h2>
+      <div class="sub">Gear from PING & Projekt, plus KP contest awards.</div>
+    </div>
+    <button class="sheet-close" id="sheetClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </header>
+
+  <div class="sheet-body">
+
+    <div class="prize-section">
+      <div class="stitle">
+        <span class="num">I</span>
+        <span class="t">Prizes</span>
+        <span class="c"></span>
+      </div>
+      <ul class="prize-list">
+        <li><span class="name">Blueprint S Irons · 4–PW</span><span class="brand">PING</span></li>
+        <li><span class="name">G440 K Driver</span><span class="brand">PING</span></li>
+        <li><span class="name">G440 K Driver</span><span class="brand">PING</span></li>
+        <li><span class="name">G440 Fairway Wood</span><span class="brand">PING</span></li>
+        <li><span class="name">G440 Hybrid</span><span class="brand">PING</span></li>
+        <li><span class="name">S259 Wedge</span><span class="brand">PING</span></li>
+        <li><span class="name">S259 Wedge</span><span class="brand">PING</span></li>
+        <li><span class="name">PING Reserve Staff Bag</span><span class="brand">PING</span></li>
+        <li><span class="name">Hoofer Lite Stand Bag</span><span class="brand">PING</span></li>
+        <li><span class="name">Rolling Travel Bag</span><span class="brand">PING</span></li>
+        <li><span class="name">Duffel Bag</span><span class="brand">PING</span></li>
+        <li><span class="name">Camelback Patch Cap</span><span class="brand">PING</span></li>
+        <li><span class="name">Aviator Cap</span><span class="brand">PING</span></li>
+        <li><span class="name">Mr. PING Cap</span><span class="brand">PING</span></li>
+        <li><span class="name">Camelback Patch Cap</span><span class="brand">PING</span></li>
+        <li><span class="name">Tour Umbrella</span><span class="brand">PING</span></li>
+        <li><span class="name">The Dutton Backpack</span><span class="brand projekt">Projekt</span></li>
+        <li><span class="name">Shell Shock Travel Case</span><span class="brand projekt">Projekt</span></li>
+        <li><span class="name">Koncord Duffel Bag</span><span class="brand projekt">Projekt</span></li>
+        <li><span class="name">Red Eye Travel Bag</span><span class="brand projekt">Projekt</span></li>
+      </ul>
+    </div>
+
+    <div class="prize-section">
+      <div class="stitle">
+        <span class="num">II</span>
+        <span class="t">KP · Closest to the Pin</span>
+        <span class="c"></span>
+      </div>
+      <ul class="prize-list">
+        <li><span class="name">Aviator Cap & Trifold Towel</span><span class="brand">PING</span></li>
+        <li><span class="name">Aviator Cap & Trifold Towel</span><span class="brand">PING</span></li>
+      </ul>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+  (function() {
+    const btn = document.getElementById('prizesBtn');
+    const sheet = document.getElementById('prizeSheet');
+    const bg = document.getElementById('sheetBg');
+    const closeBtn = document.getElementById('sheetClose');
+    function open() { sheet.classList.add('open'); bg.classList.add('open'); }
+    function close() { sheet.classList.remove('open'); bg.classList.remove('open'); }
+    btn.addEventListener('click', open);
+    bg.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  })();
+</script>
+
+</body>
+</html>
