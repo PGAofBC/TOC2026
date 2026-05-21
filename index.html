@@ -269,7 +269,7 @@
     color: var(--ink);
   }
   .tile .top-row {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: flex-end;
   }
   .tile .num {
     font-family: 'Cormorant Garamond', serif;
@@ -279,11 +279,12 @@
   }
   .tile .badge {
     font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
-    padding: 5px 9px; border-radius: 99px;
-    background: rgba(0,0,0,.5);
-    border: 1px solid rgba(201,163,90,.35);
-    color: var(--gold-2);
-    backdrop-filter: blur(4px);
+    padding: 5px 10px; border-radius: 4px;
+    background: rgba(246, 239, 222, 0.95);
+    border: none;
+    color: #0a0f1a;
+    font-weight: 700;
+    box-shadow: 0 4px 12px -4px rgba(0,0,0,.45);
   }
   .tile .badge.live {
     background: var(--live); border-color: transparent; color: #fff;
@@ -497,16 +498,7 @@
 
 <main class="app" data-screen-label="App">
 
-  <!-- top bar -->
-  <div class="topbar">
-    <button class="icon-btn" aria-label="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg>
-    </button>
-    <div class="title">EVENT FEED
-      <span class="chev"><svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 1l4 4 4-4"/></svg></span>
-    </div>
-    <div class="avatar">JD</div>
-  </div>
+  <div style="height: 18px;"></div>
 
   <!-- live scoring CTA -->
   <a class="score-cta" href="https://www.golfgenius.com/" target="_blank" rel="noopener" data-screen-label="Live scores CTA">
@@ -519,9 +511,6 @@
     <div class="copy">
       <div class="t1">Enter Live Scores</div>
       <div class="t2">Opens Golf Genius · enter your GGID to begin</div>
-    </div>
-    <div class="arrow">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
     </div>
   </a>
 
@@ -569,7 +558,6 @@
       <div class="accent"></div>
       <div class="content">
         <div class="top-row">
-          <span class="num">01</span>
           <span class="badge">Tee Sheet</span>
         </div>
         <div>
@@ -577,9 +565,6 @@
           <h3>The <em>Draw</em></h3>
           <div class="foot">
             <span>Golf Genius</span>
-            <span class="arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
-            </span>
           </div>
         </div>
       </div>
@@ -590,7 +575,6 @@
       <div class="accent"></div>
       <div class="content">
         <div class="top-row">
-          <span class="num">02</span>
           <span class="badge live">Live</span>
         </div>
         <div>
@@ -598,9 +582,6 @@
           <h3><em>Results</em></h3>
           <div class="foot">
             <span>Hole-by-hole</span>
-            <span class="arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
-            </span>
           </div>
         </div>
       </div>
@@ -611,7 +592,6 @@
       <div class="accent"></div>
       <div class="content">
         <div class="top-row">
-          <span class="num">03</span>
           <span class="badge">18 Flyovers</span>
         </div>
         <div>
@@ -619,9 +599,6 @@
           <h3>Course<br/><em>Map</em></h3>
           <div class="foot">
             <span>360° Tour</span>
-            <span class="arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
-            </span>
           </div>
         </div>
       </div>
@@ -632,7 +609,6 @@
       <div class="accent"></div>
       <div class="content">
         <div class="top-row">
-          <span class="num">04</span>
           <span class="badge">Prize Table</span>
         </div>
         <div>
@@ -640,9 +616,6 @@
           <h3>Amateur<br/><em>Prizes</em></h3>
           <div class="foot">
             <span>PING Gear & KP</span>
-            <span class="arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 6 15 12 9 18"/></svg>
-            </span>
           </div>
         </div>
       </div>
@@ -653,7 +626,7 @@
   <!-- sponsors -->
   <section class="sponsors" data-screen-label="Sponsors">
     <div class="head">
-      <div class="l">Title Sponsors</div>
+      <div class="l">Sponsors & Partners</div>
       <div class="r">With gratitude</div>
     </div>
     <div class="logos">
