@@ -130,6 +130,23 @@
   }
   .score-cta .arrow svg { width: 12px; height: 12px; }
 
+  .app-install {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: .02em;
+    color: var(--ink-mute);
+  }
+  .app-install a {
+    color: var(--gold-2);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(233,216,168,.35);
+    padding-bottom: 1px;
+    margin: 0 4px;
+  }
+  .app-install a:hover { color: #fff; border-bottom-color: rgba(255,255,255,.6); }
+  .app-install .sep { color: var(--ink-dim); margin: 0 2px; }
+
   /* ── hero card ── */
   .hero {
     position: relative;
@@ -501,7 +518,8 @@
   <div style="height: 18px;"></div>
 
   <!-- live scoring CTA -->
-  <a class="score-cta" href="https://www.golfgenius.com/" target="_blank" rel="noopener" data-screen-label="Live scores CTA">
+  <div>
+    <a class="score-cta" id="liveScoresBtn" href="https://www.golfgenius.com/" target="_blank" rel="noopener" data-screen-label="Live scores CTA">
     <div class="badge">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
         <rect x="4" y="3" width="16" height="18" rx="2"/>
@@ -510,9 +528,16 @@
     </div>
     <div class="copy">
       <div class="t1">Enter Live Scores</div>
-      <div class="t2">Opens Golf Genius · enter your GGID to begin</div>
+      <div class="t2">Opens the Golf Genius app · sign in with your GGID</div>
     </div>
   </a>
+    <div class="app-install">
+      Don’t have the app?
+      <a href="https://apps.apple.com/app/golf-genius/id1287877354" target="_blank" rel="noopener">Download for iOS</a>
+      <span class="sep">/</span>
+      <a href="https://play.google.com/store/apps/details?id=com.golfgenius.mobilegg" target="_blank" rel="noopener">Android</a>
+    </div>
+  </div>
 
   <!-- hero card -->
   <section class="hero" data-screen-label="Hero">
@@ -710,6 +735,40 @@
 
   </div>
 </aside>
+
+<script>
+  // "Enter Live Scores" — opens the Golf Genius app so the player can enter
+  // their own personal GGID. Tries the app first, falls back to the store.
+  (function () {
+    var btn = document.getElementById('liveScoresBtn');
+    if (!btn) return;
+    var APP_URL     = 'golfgenius://';
+    var IOS_STORE   = 'https://apps.apple.com/app/golf-genius/id1287877354';
+    var ANDROID_STORE = 'https://play.google.com/store/apps/details?id=com.golfgenius.mobilegg';
+    var WEB_URL     = 'https://www.golfgenius.com/';
+
+    var ua = navigator.userAgent || '';
+    var isIOS     = /iPad|iPhone|iPod/.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var isMobile  = isIOS || isAndroid;
+
+    btn.href = WEB_URL;  // desktop default
+
+    btn.addEventListener('click', function (e) {
+      if (!isMobile) return;       // desktop: let the link open normally
+      e.preventDefault();
+      var t0 = Date.now();
+      // try the app
+      window.location.href = APP_URL;
+      // if still here after a moment, the app isn't installed — go to the store
+      setTimeout(function () {
+        if (Date.now() - t0 < 2000 && !document.hidden) {
+          window.location.href = isIOS ? IOS_STORE : ANDROID_STORE;
+        }
+      }, 900);
+    });
+  })();
+</script>
 
 <script>
   (function() {
